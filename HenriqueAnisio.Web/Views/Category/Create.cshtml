@@ -1,0 +1,22 @@
+﻿@model CategoryViewModel
+
+<h3>Nova Categoria</h3>
+<div id="content">
+    <div class="row">
+        <form id="form-category" method="POST">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input id="submit-product" type="submit" value="Cadastrar" class="btn btn-primary" />
+                <a class="btn btn-info" asp-action="Index">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
