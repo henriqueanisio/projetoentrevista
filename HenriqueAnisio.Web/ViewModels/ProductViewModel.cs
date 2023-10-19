@@ -17,7 +17,7 @@ namespace HenriqueAnisio.Web.ViewModels
         public string? Description { get; set; }
 
         [DisplayName("Preço")]
-        [RegularExpression(@"^\d+(\,\d{1,2})?$", ErrorMessage = "Preço inválido. Use um formato válido, por exemplo, 12.34.")]
+        [RegularExpression(@"^\d+(\,\d{1,2})?$", ErrorMessage = "Preço inválido. Use um formato válido, por exemplo, 12,40.")]
         [Required(ErrorMessage = "O campo {0} é obrigatorio")]
         public Decimal Price { get; set; }
 

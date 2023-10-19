@@ -60,27 +60,29 @@ namespace HenriqueAnisio.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(ProductViewModel product)
+        public async Task<IActionResult> Edit(ProductViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                return View(product);
+                model.Categories = _mapper.Map<List<CategoryViewModel>>(await _categoryService.GetCategoriesAsync());
+                return View(model);
             }
 
-            await _productService.UpdateProductAsync(_mapper.Map<Product>(product), product.IdsCategories);
+            await _productService.UpdateProductAsync(_mapper.Map<Product>(model), model.IdsCategories);
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ProductViewModel product)
+        public async Task<IActionResult> Create(ProductViewModel model)
         {
             if(!ModelState.IsValid)
             {
-                return View(product);
+                model.Categories = _mapper.Map<List<CategoryViewModel>>(await _categoryService.GetCategoriesAsync());
+                return View(model);
             }
 
-            await _productService.InsertProductAsync(_mapper.Map<Product>(product), product.IdsCategories);
+            await _productService.InsertProductAsync(_mapper.Map<Product>(model), model.IdsCategories);
     
             return RedirectToAction("Index");
         }
