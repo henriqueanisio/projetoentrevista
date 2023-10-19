@@ -1,5 +1,11 @@
 ﻿@model IEnumerable<ProductViewModel>
 
+<style>
+    a {
+        color: #000;
+    }
+</style>
+
 <div id="content">
     <h1>Produtos</h1>
     <table class="table">
@@ -25,6 +31,14 @@
                             @Html.DisplayFor(modelItem => category.Name)
                             @:&nbsp
                         }
+                    </td>
+                    <td>
+                        <a asp-controller="Product" asp-action="Edit" asp-route-id="@item.Id">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </a> 
+                        <a asp-controller="Product" asp-action="Delete" asp-route-id="@item.Id">
+                            <i class="fa fa-trash" aria-hidden="true"></i>
+                        </a>
                     </td>
                 </tr>
             }

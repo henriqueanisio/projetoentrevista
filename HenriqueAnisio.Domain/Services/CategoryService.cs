@@ -12,6 +12,11 @@ namespace HenriqueAnisio.Domain.Services
             _categoryRepository = categoryRepository;
         }
 
+        public async Task<Category> GetCategoryByIdAsync(Guid id)
+        {
+            return await _categoryRepository.GetById(id);
+        }
+
         public async Task<IEnumerable<Category>> GetCategoriesAsync()
         {
             return await _categoryRepository.GetAllAsync();
@@ -20,6 +25,16 @@ namespace HenriqueAnisio.Domain.Services
         public async Task InsertCategoryAsync(Category category)
         {
             await _categoryRepository.InsertAsync(category);
+        }
+
+        public async Task UpdateCategoryAsync(Category category)
+        {
+            await _categoryRepository.UpdateAsync(category);
+        }
+
+        public async Task DeleteCategoryAsync(Guid id)
+        {
+            await _categoryRepository.DeleteAsync(id); 
         }
     }
 }

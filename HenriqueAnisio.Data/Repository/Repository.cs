@@ -17,10 +17,22 @@ namespace HenriqueAnisio.Data.Repository
             DbSet = db.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> predicate) 
+        public async Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> predicate)
         {
             return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
+        public async Task<T> GetByIdWithIncludeAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes) 
+        {
+            var query = DbSet.AsNoTracking();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.Where(predicate).FirstOrDefaultAsync();
+        }
+
 
         public virtual async Task<T> GetById(Guid Id)
         {

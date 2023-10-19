@@ -29,11 +29,47 @@ namespace HenriqueAnisio.Web.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var productViewModel = new ProductViewModel();
+            var model = new ProductViewModel();
 
-            productViewModel.Categories = _mapper.Map<List<CategoryViewModel>>(await _categoryService.GetCategoriesAsync());
+            model.Categories = _mapper.Map<List<CategoryViewModel>>(await _categoryService.GetCategoriesAsync());
 
-            return View(productViewModel);
+            return View(model);
+        }
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var model = _mapper.Map<ProductViewModel>(await _productService.GetProductByIdWithCategoriesAsync(id));
+            var allCategories = _mapper.Map<List<CategoryViewModel>>(await _categoryService.GetCategoriesAsync());
+            
+            foreach (var category in allCategories)
+            {
+                if (model.Categories.Select(x => x.Id).ToList().Contains(category.Id))
+                    category.Selected = true;
+            }
+
+            model.Categories = allCategories;
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _productService.DeleteProductAsync(id);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(ProductViewModel product)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(product);
+            }
+
+            await _productService.UpdateProductAsync(_mapper.Map<Product>(product), product.IdsCategories);
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

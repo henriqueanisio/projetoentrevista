@@ -20,6 +20,11 @@ namespace HenriqueAnisio.Domain.Services
             return await _productRepository.GetAllWithIncludeAsync(x => x.Categories);
         }
 
+        public async Task<Product> GetProductByIdWithCategoriesAsync(Guid id)
+        {
+            return await _productRepository.GetByIdWithIncludeAsync(x => x.Id == id, x => x.Categories);
+        }
+
         public async Task InsertProductAsync(Product product, List<Guid> idsCategories)
         {
             await _productRepository.InsertAsync(product);
@@ -32,6 +37,37 @@ namespace HenriqueAnisio.Domain.Services
                     await _categoryRepository.SaveChangesAsync();
                 }
             }
+        }
+
+        public async Task UpdateProductAsync(Product product, List<Guid> idsCategories)
+        {
+            var categories = await _categoryRepository.GetAsync(x => idsCategories.Contains(x.Id));
+
+            var entity = await _productRepository.GetByIdWithIncludeAsync(x => x.Id == product.Id, x => x.Categories);
+
+            foreach (var existingCategory in entity.Categories)
+            {
+                if (!categories.Contains(existingCategory))
+                {
+                    product.Categories.Remove(existingCategory);
+                }
+            }
+
+            // Adicione as novas categorias ao produto, mas verifique se já não existe uma relação
+            foreach (var category in categories)
+            {
+                if (!entity.Categories.Any(c => c.Id == category.Id))
+                {
+                    product.Categories.Add(category);
+                }
+            }
+
+            await _productRepository.UpdateAsync(product);
+        }
+
+        public async Task DeleteProductAsync(Guid id)
+        {
+            await _productRepository.DeleteAsync(id);
         }
     }
 }

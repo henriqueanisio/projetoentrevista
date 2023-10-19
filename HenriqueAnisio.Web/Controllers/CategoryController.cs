@@ -26,7 +26,26 @@ namespace HenriqueAnisio.Web.Controllers
 
         public IActionResult Create()
         {
-            return View("Create");
+            return View();
+        }
+
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var model = _mapper.Map<CategoryViewModel>(await _categoryService.GetCategoryByIdAsync(id));
+            return View(model);
+        }
+
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _categoryService.DeleteCategoryAsync(id);
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CategoryViewModel categoryViewModel)
+        {
+            await _categoryService.UpdateCategoryAsync(_mapper.Map<Category>(categoryViewModel));
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
